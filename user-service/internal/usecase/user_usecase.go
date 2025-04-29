@@ -19,7 +19,6 @@ func NewUserUseCase(repo UserRepo) *UserUseCase {
 }
 
 func (u *UserUseCase) Register(ctx context.Context, user *models.User) error {
-	// Тут можно добавить проверку на существующего пользователя
 	return u.repo.CreateUser(ctx, user)
 }
 
