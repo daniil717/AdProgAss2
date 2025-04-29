@@ -44,6 +44,14 @@ services:
       - order-service
     networks:
       - grpc-net
+  
+  nats:
+    image: nats:latest
+    container_name: nats
+    ports:
+      - "4222:4222"  
+      - "8222:8222"  
+    restart: always
 
 volumes:
   mongo-data:
