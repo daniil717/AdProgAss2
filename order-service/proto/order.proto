@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+option go_package = "order_service/proto;order";
+
+package order;
+
+service OrderService {
+  rpc PlaceOrder (OrderRequest) returns (OrderResponse);
+  rpc GetOrder (OrderID) returns (Order);
+}
+
+message OrderRequest {
+  string user_id = 1;
+  repeated OrderItem items = 2;
+  float total_price = 3;
+}
+
+message OrderItem {
+  string product_id = 1;
+  int32 quantity = 2;
+}
+
+message Order {
+  string id = 1;
+  string user_id = 2;
+  repeated OrderItem items = 3;
+  float total_price = 4;
+  string status = 5;
+}
+
+message OrderID {
+  string id = 1;
+}
+
+message OrderResponse {
+  string id = 1;
+  string status = 2;
+}

@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - grpc-net
+    volumes:
+      - mongo-data:/data/db
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "50051:50051"
+    depends_on:
+      - mongo
+    networks:
+      - grpc-net
+
+  inventory-service:
+    build: ./inventory-service
+    ports:
+      - "50052:50052"
+    networks:
+      - grpc-net
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "50053:50053"
+    networks:
+      - grpc-net
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-service
+      - inventory-service
+      - order-service
+    networks:
+      - grpc-net
+
+volumes:
+  mongo-data:
+
+networks:
+  grpc-net:

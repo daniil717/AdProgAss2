@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"user-service/internal/models"
+	"user_service/internal/models"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )

@@ -4,11 +4,11 @@ import (
 	"context"
 	"log"
 	"net"
-	"os"
-	"user-service/internal/handler"
-	"user-service/internal/repo"
-	"user-service/internal/usecase"
-	pb "user-service/proto"
+
+	"user_service/internal/handler"
+	"user_service/internal/repo"
+	"user_service/internal/usecase"
+	pb "user_service/proto"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -16,7 +16,8 @@ import (
 )
 
 func main() {
-	mongoURI := os.Getenv("MONGO_URI")
+	mongoURI := "mongodb://mongo:27017"
+
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(mongoURI))
 	if err != nil {
 		log.Fatalf("MongoDB error: %v", err)

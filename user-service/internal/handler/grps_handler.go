@@ -2,9 +2,9 @@ package handler
 
 import (
 	"context"
-	"user-service/internal/models"
-	"user-service/internal/usecase"
-	pb "user-service/proto"
+	"user_service/internal/models"
+	"user_service/internal/usecase"
+	pb "user_service/proto"
 )
 
 type UserHandler struct {
@@ -20,7 +20,7 @@ func (h *UserHandler) RegisterUser(ctx context.Context, req *pb.UserRequest) (*p
 	user := &models.User{
 		Name:     req.GetName(),
 		Email:    req.GetEmail(),
-		Password: req.GetPassword(), // в реальности шифруем
+		Password: req.GetPassword(), 
 	}
 	err := h.uc.Register(ctx, user)
 	if err != nil {

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option go_package = "inventory_service/proto;inventory";
+
+package inventory;
+
+service InventoryService {
+  rpc CreateProduct (Product) returns (ProductResponse);
+  rpc GetProductByID (ProductID) returns (Product);
+  rpc ListProducts (Empty) returns (ProductList);
+  rpc DeleteProduct (ProductID) returns (ProductResponse);
+}
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  float price = 4;
+  int32 stock = 5;
+}
+
+message ProductID {
+  string id = 1;
+}
+
+message ProductList {
+  repeated Product products = 1;
+}
+
+message ProductResponse {
+  string message = 1;
+}
+
+message Empty {}

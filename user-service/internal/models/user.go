@@ -4,5 +4,5 @@ type User struct {
 	ID       string `bson:"_id,omitempty"`
 	Name     string `bson:"name"`
 	Email    string `bson:"email"`
-	Password string `bson:"password"` // В реальности хэшируй!
+	Password string `bson:"password"` 
 }
