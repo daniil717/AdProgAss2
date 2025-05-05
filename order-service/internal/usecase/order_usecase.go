@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"context"
+	"log"
+	"order_service/internal/events"
 	"order_service/internal/models"
 )
 
@@ -11,18 +13,42 @@ type OrderRepo interface {
 }
 
 type OrderUseCase struct {
-	repo OrderRepo
+	repo      OrderRepo
+	publisher events.OrderPublisher
 }
 
-func NewOrderUseCase(r OrderRepo) *OrderUseCase {
-	return &OrderUseCase{repo: r}
+func NewOrderUseCase(r OrderRepo, p events.OrderPublisher) *OrderUseCase {
+	return &OrderUseCase{
+		repo:      r,
+		publisher: p,
+	}
 }
 
-func (u *OrderUseCase) PlaceOrder(ctx context.Context, order *models.Order) (string, error) {
-	order.Status = "PENDING"
-	return u.repo.Create(ctx, order)
+func (uc *OrderUseCase) PlaceOrder(ctx context.Context, order *models.Order) (string, error) {
+	return uc.repo.Create(ctx, order)
 }
 
-func (u *OrderUseCase) GetOrder(ctx context.Context, id string) (*models.Order, error) {
-	return u.repo.GetByID(ctx, id)
+func (uc *OrderUseCase) GetOrder(ctx context.Context, id string) (*models.Order, error) {
+	return uc.repo.GetByID(ctx, id)
+}
+
+func (uc *OrderUseCase) CreateOrder(ctx context.Context, order *models.Order) error {
+	orderID, err := uc.repo.Create(ctx, order)
+	if err != nil {
+		return err
+	}
+
+	productIDs := []string{}
+	for _, p := range order.Items {
+		productIDs = append(productIDs, p.ProductID)
+	}
+
+	err = uc.publisher.PublishOrderCreated(orderID, productIDs)
+	if err != nil {
+		log.Printf("❌ Failed to publish order.created: %v", err)
+	} else {
+		log.Printf("✅ Published order.created for order %s", orderID)
+	}
+
+	return nil
 }

@@ -31,8 +31,13 @@ services:
     build: ./order-service
     ports:
       - "50053:50053"
+    depends_on:
+      - mongo
+      - nats
     networks:
       - grpc-net
+    environment:
+      - NATS_URL=nats://nats:4222
 
   api-gateway:
     build: ./api-gateway
@@ -44,13 +49,16 @@ services:
       - order-service
     networks:
       - grpc-net
-  
+
   nats:
     image: nats:latest
     container_name: nats
+    hostname: nats
     ports:
-      - "4222:4222"  
-      - "8222:8222"  
+      - "4222:4222"
+      - "8222:8222"
+    networks:
+      - grpc-net
     restart: always
 
 volumes:

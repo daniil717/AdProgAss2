@@ -28,7 +28,8 @@ func (h *OrderHandler) PlaceOrder(ctx context.Context, req *pb.OrderRequest) (*p
 	order := &models.Order{
 		UserID:     req.UserId,
 		Items:      items,
-		TotalPrice: req.TotalPrice,
+		TotalPrice: float64(req.TotalPrice), // float32 → float64
+		Status:     "PENDING",
 	}
 
 	id, err := h.uc.PlaceOrder(ctx, order)
@@ -38,7 +39,7 @@ func (h *OrderHandler) PlaceOrder(ctx context.Context, req *pb.OrderRequest) (*p
 
 	return &pb.OrderResponse{
 		Id:     id,
-		Status: "PENDING",
+		Status: order.Status,
 	}, nil
 }
 
@@ -57,10 +58,10 @@ func (h *OrderHandler) GetOrder(ctx context.Context, req *pb.OrderID) (*pb.Order
 	}
 
 	return &pb.Order{
-		Id:         order.ID,
+		Id:         order.ID.Hex(),
 		UserId:     order.UserID,
 		Items:      items,
-		TotalPrice: order.TotalPrice,
+		TotalPrice: float32(order.TotalPrice), // float64 → float32
 		Status:     order.Status,
 	}, nil
 }
