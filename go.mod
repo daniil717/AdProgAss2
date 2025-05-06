@@ -1,3 +1,3 @@
-module inventory_service
+module AdProgAss2
 
 go 1.23.4
