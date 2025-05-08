@@ -8,6 +8,7 @@ import (
 
 	"order_service/internal/events" // 👈 добавляем events
 	"order_service/internal/handler"
+	"order_service/internal/logger"
 	"order_service/internal/repo"
 	"order_service/internal/usecase"
 	pb "order_service/proto"
@@ -18,6 +19,9 @@ import (
 )
 
 func main() {
+
+	logger.Init()
+
 	// MongoDB
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {

@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"log"
 	"net"
 	"os"
 
 	"inventory_service/internal/handler"
+	"inventory_service/internal/logger"
 	"inventory_service/internal/repo"
 	"inventory_service/internal/usecase"
 	pb "inventory_service/proto"
@@ -17,6 +17,9 @@ import (
 )
 
 func main() {
+
+	logger.Init()
+
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {
 		mongoURI = "mongodb://localhost:27017"
@@ -24,7 +27,7 @@ func main() {
 
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(mongoURI))
 	if err != nil {
-		log.Fatalf("MongoDB error: %v", err)
+		logger.Error.Fatalf("MongoDB error: %v", err)
 	}
 	db := client.Database("FoodStore")
 
@@ -34,14 +37,14 @@ func main() {
 
 	listener, err := net.Listen("tcp", ":50052")
 	if err != nil {
-		log.Fatalf("Listen error: %v", err)
+		logger.Error.Fatalf("Listen error: %v", err)
 	}
 
 	grpcServer := grpc.NewServer()
 	pb.RegisterInventoryServiceServer(grpcServer, handler)
 
-	log.Println("Inventory Service started on :50052")
+	logger.Info.Println("Inventory Service started on :50052")
 	if err := grpcServer.Serve(listener); err != nil {
-		log.Fatalf("Server error: %v", err)
+		logger.Error.Fatalf("Server error: %v", err)
 	}
 }

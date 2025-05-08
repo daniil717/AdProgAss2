@@ -21,6 +21,8 @@ services:
     networks:
       - grpc-net
     restart: always
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
 
   inventory-service:
     build: ./inventory-service
@@ -32,6 +34,9 @@ services:
     networks:
       - grpc-net
     restart: always
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - NATS_URL=nats://nats:4222
 
   order-service:
     build: ./order-service
@@ -43,8 +48,10 @@ services:
     networks:
       - grpc-net
     environment:
+      - MONGO_URI=mongodb://mongo:27017
       - NATS_URL=nats://nats:4222
     restart: always
+    
 
   api-gateway:
     build: ./api-gateway
